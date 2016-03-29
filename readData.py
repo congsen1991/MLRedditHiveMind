@@ -21,7 +21,6 @@ def Solution(subredditName,sql_conn):
 
     pdFrame = pd.DataFrame(Users)
 
-    #pdFrame.to_sql('data_chunks',engine)
     pdFrame.to_sql(subredditName+'1',engine,index=False)
 
 
