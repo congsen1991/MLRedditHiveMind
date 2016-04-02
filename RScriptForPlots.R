@@ -7,12 +7,13 @@ if (!require("RColorBrewer")) {
   library(RColorBrewer)
 }
 
+setwd("/Volumes/Transcend/MLRedditHiveMind/")
 
-df <- data.frame(word = c('a','b','c','d'),
-                 wordCount = c(2,5,3,6))
+df <- read.csv("politics_100.csv",header = TRUE)
+df <- df[,-1]
 
-wordcloud(toupper(df$word),
-          df$wordCount,
+wordcloud(toupper(df$key),
+          df$count,
           scale=c(5,.1),
           random.order=F,
           rot.per=.10,
