@@ -60,8 +60,8 @@ for index in range(len(subredditOfInterest)):
     curDF.apply(makeDict, axis=1)
     countDF = pd.DataFrame({'count':curDict.values(), 'key':curDict.keys()})
     countDF = countDF.sort_values(by='count',ascending = False)
-    countDF.to_csv(subredditName+'.csv', sep=',', encoding='utf-8')
-    countDF[0:100].to_csv(subredditName+'_100.csv', sep=',', encoding='utf-8')
+    countDF.to_csv('data/'+subredditName+'.csv', sep=',', encoding='utf-8')
+    countDF[0:100].to_csv('data/'+subredditName+'_100.csv', sep=',', encoding='utf-8')
     
 
 

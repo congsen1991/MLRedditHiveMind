@@ -9,9 +9,13 @@ if (!require("RColorBrewer")) {
 
 setwd("/Volumes/Transcend/MLRedditHiveMind/")
 
-df <- read.csv("politics_100.csv",header = TRUE)
+fileNames <- c('politics_100','technology_100','worldnews_100')
+
+wordsPlot <- function(fileName){
+df <- read.csv(paste("data/",fileName,".csv",sep=''),header = TRUE)
 df <- df[,-1]
 
+png(paste("imgs/",fileName,".png",sep=""))
 wordcloud(toupper(df$key),
           df$count,
           scale=c(5,.1),
@@ -21,3 +25,9 @@ wordcloud(toupper(df$key),
           colors=brewer.pal(8, "Dark2"),
           family="Avenir Next Condensed Bold",
           random.color=T)
+dev.off()
+}
+
+for (i in 1:3){
+  wordsPlot(fileNames[i])
+}
