@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sqlite3
+import numpy as np
 import pandas as pd
 from stop_words import get_stop_words
 from sqlalchemy import create_engine
@@ -63,9 +64,9 @@ def Solution(subredditName, tableName):
 def makeDict(row):
     # a simple function, gather all words from current row, 
     # add it to a hashmap
-    curWordList ,score = row['wordList'], row['score']
+    curWordList ,score = set(row['wordList']), row['score']
     for word in curWordList:
-        curDict[word] = curDict.get(word,0) + score
+        curDict[word] = curDict.get(word,np.array([0,0])) + np.array([score,1])
     
 subredditOfInterest = ['worldnews',
                        'technology',
@@ -90,7 +91,10 @@ for index in range(len(subredditOfInterest)):
     # Add another column to pandas dataframe, the list of words
     curDF['wordList'] = curDF.apply(getWordList,axis=1)
     
-    # make a local hashmap for current subreddit    
+    # make a local hashmap for current subreddit
+    # curDict gets words counts multiple by score
+    # countDict is the number of times a word show up
+    # normDict is score after normalization    
     curDict = {}
     
     # apply function makeDict to all wordList of current subreddit
@@ -98,10 +102,12 @@ for index in range(len(subredditOfInterest)):
     # modify function in this version, so that word frequencies are 
     # multipled by the votes
     curDF.apply(makeDict, axis=1)
+    length = len(curDict)
+    normDict = {key:(val[0]/val[1]) for key, val in curDict.iteritems() if val[1]>100 and val[1]<length/10}
     
     # make a new pandas dataframe called countDF
     # which is equivalent to the hashmap
-    countDF = pd.DataFrame({'count':curDict.values(), 'key':curDict.keys()})
+    countDF = pd.DataFrame({'count':normDict.values(), 'key':normDict.keys()})
     
     # Sort countDF according to counts
     countDF = countDF.sort_values(by='count',ascending = False)
