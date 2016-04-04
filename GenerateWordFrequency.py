@@ -18,7 +18,7 @@ def getWordList(row):
     ans = ans.split()
     
     # using library stopwords to get stop words list
-'''
+    '''
 "a", "about",  "above",  "after",  "again",  "against",  "all",  "am",  "an", 
 "and",  "any",  "are",  "aren't",  "as",  "at",  "be",  "because", 
 "been",  "before",  "being",  "below",  "between",  "both",  "but",  "by", 
@@ -41,7 +41,8 @@ def getWordList(row):
 "where's",  "which",  "while",  "who",  "who's",  "whom",  "why",  "why's", 
 "with",  "won't",  "would",  "wouldn't",  "you",  "you'd",  "you'll",  "you're", 
 "you've",  "your",  "yours",  "yourself",  "yourselves", 
-'''
+    '''
+    
     stop_words = set(get_stop_words('english'))
     
     return [word for word in ans if word not in stop_words and len(word)>2]
@@ -62,9 +63,9 @@ def Solution(subredditName, tableName):
 def makeDict(row):
     # a simple function, gather all words from current row, 
     # add it to a hashmap
-    curWordList = row['wordList']
+    curWordList ,score = row['wordList'], row['score']
     for word in curWordList:
-        curDict[word] = curDict.get(word,0) + 1
+        curDict[word] = curDict.get(word,0) + score
     
 subredditOfInterest = ['worldnews',
                        'technology',
@@ -94,6 +95,8 @@ for index in range(len(subredditOfInterest)):
     
     # apply function makeDict to all wordList of current subreddit
     # so that the words are processed and count stored in curDict
+    # modify function in this version, so that word frequencies are 
+    # multipled by the votes
     curDF.apply(makeDict, axis=1)
     
     # make a new pandas dataframe called countDF
