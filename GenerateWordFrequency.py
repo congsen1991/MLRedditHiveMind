@@ -68,7 +68,10 @@ def makeDict(row):
     # a simple function, gather all words from current row, 
     # add it to a hashmap
     curWordList ,score = set(row['wordList']), row['score']
+    tmpSet = set()
     for word in curWordList:
+        if word in tmpSet: continue
+        tmpSet.add(word)
         curDict[word] = curDict.get(word,np.array([0,0])) + np.array([score,1])
     
 subredditOfInterest = ['worldnews',
