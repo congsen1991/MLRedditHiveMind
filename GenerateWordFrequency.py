@@ -4,22 +4,10 @@ import numpy as np
 import pandas as pd
 from stop_words import get_stop_words
 from sqlalchemy import create_engine
+import helper
     
-def getWordList(row):
-    # take a row of a pandas dataframe as input
-    # read sentence from current row, output words in a list.
-    sentence = row['body']
-    ans = ''
-    
-    for char in sentence:
-        if char.isalpha():
-            ans+=char
-        else: ans+= ' '
-    
-    ans = ans.split()
-    
-    # using library stopwords to get stop words list
-    '''
+# using library stopwords to get stop words list
+'''
 "a", "about",  "above",  "after",  "again",  "against",  "all",  "am",  "an", 
 "and",  "any",  "are",  "aren't",  "as",  "at",  "be",  "because", 
 "been",  "before",  "being",  "below",  "between",  "both",  "but",  "by", 
@@ -42,10 +30,25 @@ def getWordList(row):
 "where's",  "which",  "while",  "who",  "who's",  "whom",  "why",  "why's", 
 "with",  "won't",  "would",  "wouldn't",  "you",  "you'd",  "you'll",  "you're", 
 "you've",  "your",  "yours",  "yourself",  "yourselves", 
-    '''
+'''
     
-    stop_words = set(get_stop_words('english'))
+stop_words = set([x.lower() for x in get_stop_words('english')+helper.stopwords])
+        
+
+def getWordList(row,stop_words=stop_words):
+    # take a row of a pandas dataframe as input
+    # read sentence from current row, output words in a list.
+    sentence = row['body']
+    ans = ''
     
+    for char in sentence.lower():
+        if char.isalpha():
+            ans+=char
+        else: ans+= ' '
+    
+    ans = ans.split()
+    
+
     return [word for word in ans if word not in stop_words and len(word)>2]
     
 
