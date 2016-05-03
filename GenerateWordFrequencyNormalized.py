@@ -1,23 +1,13 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
+import numpy as np
 import pandas as pd
 from stop_words import get_stop_words
 from sqlalchemy import create_engine
+import helper
     
-def getWordList(row):
-    # take a row of a pandas dataframe as input
-    # read sentence from current row, output words in a list.
-    sentence = row['body']
-    ans = ''
-    
-    for char in sentence:
-        if char.isalpha():
-            ans+=char
-        else: ans+= ' '
-    
-    ans = ans.split()
-    
-    # using library stopwords to get stop words list
+# using library stopwords to get stop words list
 '''
 "a", "about",  "above",  "after",  "again",  "against",  "all",  "am",  "an", 
 "and",  "any",  "are",  "aren't",  "as",  "at",  "be",  "because", 
@@ -42,9 +32,24 @@ def getWordList(row):
 "with",  "won't",  "would",  "wouldn't",  "you",  "you'd",  "you'll",  "you're", 
 "you've",  "your",  "yours",  "yourself",  "yourselves", 
 '''
-    stop_words = set(get_stop_words('english'))
     
-    return [word for word in ans if word.lower() not in stop_words and len(word)>2]
+stop_words = set([x.lower() for x in get_stop_words('english')+helper.stopwords])
+        
+
+def getWordList(row,stop_words=stop_words):
+    # take a row of a pandas dataframe as input
+    # read sentence from current row, output words in a list.
+    sentence = row['body']
+    ans = ''
+    
+    for char in sentence.lower():
+        if char.isalpha():
+            ans+=char
+        else: ans+= ' '
+    
+    ans = ans.split()
+
+    return [word for word in ans if word not in stop_words and len(word)>2]
     
 
 def Solution(subredditName, tableName):
@@ -62,9 +67,12 @@ def Solution(subredditName, tableName):
 def makeDict(row):
     # a simple function, gather all words from current row, 
     # add it to a hashmap
-    curWordList = row['wordList']
+    curWordList ,score = set(row['wordList']), row['score']
+    tmpSet = set()
     for word in curWordList:
-        curDict[word] = curDict.get(word,0) + 1
+        if word in tmpSet: continue
+        tmpSet.add(word)
+        curDict[word] = curDict.get(word,np.array([0,0])) + np.array([score,1])
     
 subredditOfInterest = ['worldnews',
                        'technology',
@@ -89,28 +97,28 @@ for index in range(len(subredditOfInterest)):
     # Add another column to pandas dataframe, the list of words
     curDF['wordList'] = curDF.apply(getWordList,axis=1)
     
-    # make a local hashmap for current subreddit    
+    # make a local hashmap for current subreddit
+    # curDict gets words counts multiple by score
+    # countDict is the number of times a word show up
+    # normDict is score after normalization    
     curDict = {}
     
     # apply function makeDict to all wordList of current subreddit
     # so that the words are processed and count stored in curDict
+    # modify function in this version, so that word frequencies are 
+    # multipled by the votes
     curDF.apply(makeDict, axis=1)
+    length = len(curDict)
+    normDict = {key:(val[0]/val[1]) for key, val in curDict.iteritems() if val[1]>100 and val[1]<length/10}
     
     # make a new pandas dataframe called countDF
     # which is equivalent to the hashmap
-    countDF = pd.DataFrame({'count':curDict.values(), 'key':curDict.keys()})
+    countDF = pd.DataFrame({'count':normDict.values(), 'key':normDict.keys()})
     
     # Sort countDF according to counts
     countDF = countDF.sort_values(by='count',ascending = False)
     
     # write them to csv
-    countDF.to_csv('data/'+subredditName+'_edit.csv', sep=',', encoding='utf-8')
-    countDF[0:100].to_csv('data/'+subredditName+'_100_edit.csv', sep=',', encoding='utf-8')
+    countDF.to_csv('data/'+subredditName+'Normalized.csv', sep=',', encoding='utf-8')
+    countDF[0:100].to_csv('data/'+subredditName+'_100Normalized.csv', sep=',', encoding='utf-8')
     
-
-
-    
-
-
-
-
