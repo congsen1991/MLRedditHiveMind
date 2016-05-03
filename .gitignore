@@ -1,4 +1,10 @@
 /*.csv
+<<<<<<< HEAD
 database/*
 *.7z
 /*.sqlite
+=======
+*.7z
+/*.sqlite
+/database
+>>>>>>> rankByMeanScore
