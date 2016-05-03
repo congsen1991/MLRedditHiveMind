@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
+import numpy as np
 import pandas as pd
 from stop_words import get_stop_words
 from sqlalchemy import create_engine
@@ -8,6 +9,7 @@ import helper
     
 # using library stopwords to get stop words list
 '''
+<<<<<<< HEAD
 "a", "about",  "above",  "after",  "again",  "against",  "all",  "am",  "an", 
 "and",  "any",  "are",  "aren't",  "as",  "at",  "be",  "because", 
 "been",  "before",  "being",  "below",  "between",  "both",  "but",  "by", 
@@ -130,6 +132,8 @@ import helper
     
 # using library stopwords to get stop words list
 '''
+=======
+>>>>>>> rankByMeanScore
 "a", "about",  "above",  "after",  "again",  "against",  "all",  "am",  "an", 
 "and",  "any",  "are",  "aren't",  "as",  "at",  "be",  "because", 
 "been",  "before",  "being",  "below",  "between",  "both",  "but",  "by", 
@@ -162,6 +166,7 @@ def getWordList(row,stop_words=stop_words):
     # read sentence from current row, output words in a list.
     sentence = row['body']
     ans = ''
+<<<<<<< HEAD
     
     for char in sentence.lower():
         if char.isalpha():
@@ -170,6 +175,16 @@ def getWordList(row,stop_words=stop_words):
     
     ans = ans.split()
     
+=======
+    
+    for char in sentence.lower():
+        if char.isalpha():
+            ans+=char
+        else: ans+= ' '
+    
+    ans = ans.split()
+    
+>>>>>>> rankByMeanScore
 
     return [word for word in ans if word not in stop_words and len(word)>2]
     
