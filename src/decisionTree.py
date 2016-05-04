@@ -25,6 +25,10 @@ class decisionTree(object):
         df = pd.read_pickle(subject+'.pickle')
         self.data=pd.DataFrame(df)
         self.data.dropna()
+        maxVal = self.data['score'].max()
+        minVal = self.data['score'].min()
+
+        self.data['newScore']= self.data.apply(self.convertScore,args=[minVal,maxVal],axis=1)
 
     def writeToCsv(self, fileName):
         self.data.to_csv(fileName,sep=',')
@@ -52,14 +56,25 @@ class decisionTree(object):
 	    #Create trainning and testing sets
         self.X=self.data.ix[:,xSet]
         self.Y=self.data.ix[:,y]
+        self.X = np.array(self.X).astype(float)
+        self.Y = np.array(self.Y).astype(float)
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y, test_size=0.3, random_state=0)
+        
+    def convertScore(self,row,minVal,maxVal):
+        score = row['score']
+        if score<0: return 1
+        if score<10: return 2
+        if score<100: return 3
+        if score<1000: return 4
+        return 5
+
 
 
     def scale(self):
         """ The data is scaled in preparation for creating the DT.  WHY ?  
         WHAT IS THE DIFFERENCE BETWEEN SCALING AND NORMALIZATION?"""
         sc = StandardScaler()
-        sc=sc.fit(X_train)
+        sc=sc.fit(self.X_train)
         self.X_train = sc.transform(self.X_train)
         self.X_test = sc.transform(self.X_test)
 
@@ -120,8 +135,9 @@ print d.colNames
 d.printData()
 
 xSet = [2, 3,4,5,6,7,8,9,10,11,12]
-y = 1
+y = 13
 d.createTestSet(xSet,y)
+d.scale()
 
 d.buildTree(3)
 d.fitTree()
