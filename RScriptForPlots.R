@@ -31,3 +31,26 @@ dev.off()
 for (i in 1:3){
   wordsPlot(fileNames[i])
 }
+
+
+fileNames <- c('politics','technology','worldnews')
+
+histPlot <- function(fileName){
+  df <- read.csv(paste("data/",fileName,".csv",sep=''),header = TRUE)
+  df <- df[,-1]
+  print(summary(df))
+  png(paste("imgs/",fileName,"_count_hist.png",sep=""))
+  hist(df$count)
+  dev.off()
+  
+  countdf <- read.csv(paste("data/",fileName,"_raw.csv",sep=''),header = FALSE)
+  png(paste("imgs/",fileName,"_raw_count_hist.png",sep=""))
+  hist(df[,1])
+  dev.off()  
+  
+}
+
+for (i in 1:3){
+  histPlot(fileNames[i])
+}
+

@@ -91,6 +91,9 @@ for index in range(len(subredditOfInterest)):
     subredditName = subredditOfInterest[index]
     tableName = tableNames[index]
     curDF = Solution(subredditName, tableName)
+    
+    countDF['count'].to_csv('data/'+subredditName+'_raw.csv', sep=',', encoding='utf-8')    
+    
     print 'processing subreddit %s' % subredditName
     dataList.append(curDF)
     
