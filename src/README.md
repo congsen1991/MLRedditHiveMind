@@ -1,13 +1,13 @@
 Source file:
 
-readData.py
+readData.py: 
     Read raw sqlite database file (30Gb), and select all data in subreddit of interest, output into new sqlite databases.
     
-GenerateWordFrequency.py
+GenerateWordFrequency.py: 
     Iterating all 3 subreddits of interest, by reading data generated from readData.py. Rank the words by their number of apperance.
 
-GenerateWordFrequencyNormalized.py
+GenerateWordFrequencyNormalized.py: 
     Similar to GenerateWordFrequency.py, but normalize the ranking, by adding the score of each apperance as weight, so that the words appear in every post would be diluted.
 
-helper.py
+helper.py: 
     The place to process stop words, serving GenerateWordFrequency.py and GenerateWordFrequencyNormalized.py.
