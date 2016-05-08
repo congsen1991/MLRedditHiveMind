@@ -15,4 +15,7 @@ helper.py:
 RScriptForPlots.R:
     A script read data from every analysis, the only purpose is generating plots.
 
+NeuralNet.ipynb :
+    A script read data from non_neutral and neutral data, and build a neural network and presenting the MSE in a line graph.
+
     
