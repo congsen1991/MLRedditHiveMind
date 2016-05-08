@@ -11,3 +11,8 @@ GenerateWordFrequencyNormalized.py:
 
 helper.py: 
     The place to process stop words, serving GenerateWordFrequency.py and GenerateWordFrequencyNormalized.py.
+
+RScriptForPlots.R:
+    A script read data from every analysis, the only purpose is generating plots.
+
+    
