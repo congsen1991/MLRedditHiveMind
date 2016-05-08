@@ -14,9 +14,6 @@ helper.py:
 
 RScriptForPlots.R:
     A script read data from every analysis, the only purpose is generating plots.
-decisiontree.py:
-    A script generate decision trees based on the data from processData.
-KNN.py:
-    A script can generate KNN figures based on the data from processData.  
+
 
     
