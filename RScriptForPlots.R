@@ -1,3 +1,7 @@
+##########################################################
+#      load required library
+##########################################################
+
 if (!require("wordcloud")) {
   install.packages("wordcloud")
   library(wordcloud)
@@ -9,6 +13,10 @@ if (!require("RColorBrewer")) {
 
 setwd("/Volumes/Transcend/MLRedditHiveMind/")
 
+##########################################################
+#      read data from the top 100 words generated
+#      and plot by using wordcloud
+##########################################################
 fileNames <- c('politics_100','technology_100','worldnews_100')
 
 wordsPlot <- function(fileName){
@@ -32,7 +40,10 @@ for (i in 1:3){
   wordsPlot(fileNames[i])
 }
 
-
+##########################################################
+#      read data from all data in each subreddit
+#      and plot histogram
+##########################################################
 fileNames <- c('politics','technology','worldnews')
 
 histPlot <- function(fileName) {
@@ -42,19 +53,15 @@ histPlot <- function(fileName) {
   hist(df$score,xlim=c(-6, 10),breaks=4000)
   dev.off()
   
-  #countdf <- read.csv(paste("data/",fileName,"_raw.csv",sep=''),header = FALSE)
-  #png(paste("imgs/",fileName,"_raw_count_hist.png",sep=""))
-  #hist(log(df[,1]))
-  #dev.off()  
+  countdf <- read.csv(paste("data/",fileName,"_raw.csv",sep=''),header = FALSE)
+  png(paste("imgs/",fileName,"_raw_count_hist.png",sep=""))
+  hist(log(df[,1]))
+  dev.off()  
 }
 
 for (i in 1:3){
   histPlot(fileNames[i])
 }
-
-
-
-
 
 histForCountry <- function(fileName) {
   df <- read.csv(paste("data/",fileName,".csv",sep=''),header = TRUE)
